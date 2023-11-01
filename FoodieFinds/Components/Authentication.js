@@ -1,35 +1,133 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet,Image,alert, Alert } from 'react-native';
 import { initializeApp } from "firebase/app";
-import { getAuth, createUserWithEmailAndPassword,signInWithEmailAndPassword } from 'firebase/auth';
-import { useNavigation } from '@react-navigation/native';
+import { getAuth, createUserWithEmailAndPassword,signInWithEmailAndPassword,signInWithPopup,GoogleAuthProvider } from 'firebase/auth';
 import firebaseConfig from '../firebaseConfig';
+import * as WebBrowser from 'expo-web-browser';
+import * as Google from 'expo-auth-session/providers/google';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+WebBrowser.maybeCompleteAuthSession();
+
 const AuthScreen = () => {
 
-
-    // const firebaseConfig = {
-    //     apiKey: process.env.EXPO_PUBLIC_API_KEY,
-    //     authDomain: process.env.EXPO_PUBLIC_AUTH_DOMAIN,
-    //     projectId: process.env.EXPO_PUBLIC_PROJECT_ID,
-    //     storageBucket: process.env.EXPO_PUBLIC_STORAGE_BUCKET,
-    //     messagingSenderId: process.env.EXPO_PUBLIC_MESSAGING_SENDER_ID,
-    //     appId: process.env.EXPO_PUBLIC_APP_ID
-    // };
-    
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
+  const firebaseConfig = {
+    apiKey: "AIzaSyC8NYFhcvX3csY-_YTGL9awPFRNAt81bVI",
+    authDomain: "foodiefinder-14a07.firebaseapp.com",
+    projectId: "foodiefinder-14a07",
+    storageBucket: "foodiefinder-14a07.appspot.com",
+    messagingSenderId: "264191423840",
+    appId: "1:264191423840:web:15a5ff9c4280a354ed9a05"
+};
+   const app = initializeApp(firebaseConfig);
+   const auth = getAuth(app);
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
-  const navigation = useNavigation();
+  const [userInfo, setUserInfo] = useState(null);
+ // const navigation = useNavigation();
 
+  //Google authentication
+  const provider = new GoogleAuthProvider();
+
+  const GOOGLE_WEB_CLIENT_ID = '264191423840-l4srk6gudnar85sl4olj8j7iaoed1kvn.apps.googleusercontent.com'
+  const GOOGLE_IOS_CLIENT_ID = '264191423840-5re8e7cno5eiqjlclfkcde2u0jpe0eie.apps.googleusercontent.com'
+  const GOOGLE_ANDROID_CLIENT_ID = '264191423840-1mrqasdue65ga4g08jish971tvui3vk3.apps.googleusercontent.com'
+
+  const [request, response, promptAsync]= Google.useAuthRequest({
+    androidClientId:GOOGLE_ANDROID_CLIENT_ID,
+    iosClientId:GOOGLE_IOS_CLIENT_ID,
+    webClientId:GOOGLE_WEB_CLIENT_ID
+  })
+
+  React.useEffect(()=>{
+    handleSignInWithGoogle()
+  },[response]);
+
+  async function handleSignInWithGoogle(){
+    console.log("Entered google signIn")
+    const user = await AsyncStorage.getItem("@user");
+    console.log(user);
+    if(!user){
+      if(response?.type === "success"){
+        await getUserInfo(response.authentication.accessToken);
+      }
+    }
+    else{
+      setUserInfo(JSON.parse(use));
+    }
+  }
+
+  const getUserInfo = async(token)=>{
+    if(!token) return;
+    try{
+      const response = await fetch(
+        "https://www.googleapis.com/userinfo/v2/me",
+        {
+          headers:{Authorization: `Bearer ${token}`},
+        }
+      );
+
+      const user = await  response.json();
+      await AsyncStorage.setItem("@user",JSON.stringify(user));
+      setUserInfo(user);
+    }catch(error){
+      console.log("Error");
+    }
+
+  }
+
+
+  // const signInWithGoogle = async() =>{
+  //   const provider = new firebase.auth.GoogleAuthProvider();
+  //   firebase.auth().signInWithPopup(provider)
+  //     .then((result) => {
+  //       const user = result.user;
+  //       console.log(user);
+  //       // Handle user information as needed
+  //     })
+  //     .catch((error) => {
+  //       // Handle errors
+  //       const errorCode = error.code;
+  //       const errorMessage = error.message;
+  //       console.error(errorCode, errorMessage);
+  //     });
+  
+  // }
+
+  const signInWithGoogle = async()=>{
+  // web working version
+  signInWithPopup(auth, provider)
+  .then((result) => {
+    // This gives you a Google Access Token. You can use it to access the Google API.
+    const credential = GoogleAuthProvider.credentialFromResult(result);
+    const token = credential.accessToken;
+    // The signed-in user info.
+    const user = result.user;
+    console.log(user)
+    // IdP data available using getAdditionalUserInfo(result)
+    // ...
+  }).catch((error) => {
+    // Handle Errors here.
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    // The email of the user's account used.
+    const email = error.customData.email;
+    // The AuthCredential type that was used.
+    const credential = GoogleAuthProvider.credentialFromError(error);
+    // ...
+  });
+}
  
   
 
   const handleSignUp = async () => {
+    console.log("Entered signup");
     if(email ==undefined || password == undefined || password== '' || email== ''){
-        Alert.alert('Enter all the fields');
+         Alert.alert('Enter all the fields');
+        // alert('E');
+        //window.alert('Enter all the fields');
         return
     }
     createUserWithEmailAndPassword(auth, email, password)
@@ -38,7 +136,7 @@ const AuthScreen = () => {
       Alert.alert('Signed up successfully');
       const user = userCredential.user;
       //console.log("Success:{}",user);
-      navigation.navigate('Home')
+     // navigation.navigate('Home')
     })
     .catch((error) => {
       const errorCode = error.code;
@@ -60,7 +158,7 @@ const AuthScreen = () => {
     const user = userCredential.user;
     Alert.alert('Signed In successfully');
     console.log(user);
-    navigation.navigate('Home');
+   // navigation.navigate('Home');
   })
   .catch((error) => {
     const errorCode = error.code;
@@ -113,6 +211,10 @@ const AuthScreen = () => {
         
 
     </View> 
+
+    <View>
+        <Button title="Sign in with Google" onPress={() =>promptAsync()} />
+      </View>
     </View>
   );
 };
@@ -123,6 +225,7 @@ buttonContainer:{
     flexDirection: 'row', 
     justifyContent: 'space-between', 
     width: '50%',
+    marginBottom:10
 },
   container: {
     flex: 1,

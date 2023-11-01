@@ -1,4 +1,5 @@
-import * as firebase from "firebase";
+
+import Constants from 'expo-constants';
 
 const firebaseConfig = {
     apiKey: process.env.EXPO_PUBLIC_API_KEY,
@@ -8,8 +9,6 @@ const firebaseConfig = {
     messagingSenderId: process.env.EXPO_PUBLIC_MESSAGING_SENDER_ID,
     appId: process.env.EXPO_PUBLIC_APP_ID
 };
-
-
 
 export default firebaseConfig;
 

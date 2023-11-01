@@ -15,16 +15,24 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.anonymous.foodiefinds"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.anonymous.foodiefinds"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "scheme": "foodiefinds",
+    "extra": {
+      "eas": {
+        "projectId": "efef98ee-32a0-443e-b29e-e295ce6bf2a7"
+      }
     }
   }
 }
