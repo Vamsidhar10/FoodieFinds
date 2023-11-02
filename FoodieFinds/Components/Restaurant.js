@@ -1,14 +1,13 @@
 import React from 'react';
 import { View, Text, Image, StyleSheet,Button } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
 
-const RestaurantCard = ({ restaurant }) => {
+const RestaurantCard = ({ restaurant}) => {
   const categories = restaurant.categories.map((category) => category.title).join(', ');
   const reviewCount = restaurant.review_count;
   const rating = restaurant.rating;
-
-  const navigation = useNavigation();
+   const navigation = useNavigation();
+  
   const goToDetails = () => {
     // Navigate to the restaurant details screen
     navigation.navigate('RestaurantDetails', { restaurant });

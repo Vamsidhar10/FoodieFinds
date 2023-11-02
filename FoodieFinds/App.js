@@ -49,7 +49,7 @@ const getUser = async()=>{
               />
             );
           },
-        })} initialRouteName='Home'
+        })} initialRouteName='Auth'
       >
         {<Tab.Screen name="Auth" component={AuthScreen}/> }
         <Tab.Screen name="Home" component={Home}/>

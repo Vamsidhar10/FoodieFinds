@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, ScrollView, Alert } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, ScrollView, Alert,FlatList } from 'react-native';
 import axios from 'axios';
 import Restaurant from "../Components/Restaurant";
 
@@ -52,6 +52,91 @@ const Home = () => {
       "phone": "+18122026789",
       "display_phone": "(812) 202-6789",
       "distance": 1379.187891803987
+  },
+  {
+      "id": "UnS087E_cYstvT0HJO8Ycw",
+      "alias": "the-elm-bloomington",
+      "name": "The Elm",
+      "image_url": "https://s3-media3.fl.yelpcdn.com/bphoto/Lffg2EFgd2B2xwn2a15ZQA/o.jpg",
+      "is_closed": false,
+      "url": "https://www.yelp.com/biz/the-elm-bloomington?adjust_creative=XUJZ7EXQV4av9HuQtef3Nw&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=XUJZ7EXQV4av9HuQtef3Nw",
+      "review_count": 57,
+      "categories": [
+          {
+              "alias": "newamerican",
+              "title": "New American"
+          }
+      ],
+      "rating": 4.5,
+      "coordinates": {
+          "latitude": 39.161246325212296,
+          "longitude": -86.52629759999999
+      },
+      "transactions": [],
+      "location": {
+          "address1": "614 E 2nd St",
+          "address2": "",
+          "address3": null,
+          "city": "Bloomington",
+          "zip_code": "47401",
+          "country": "US",
+          "state": "IN",
+          "display_address": [
+              "614 E 2nd St",
+              "Bloomington, IN 47401"
+          ]
+      },
+      "phone": "+18124074339",
+      "display_phone": "(812) 407-4339",
+      "distance": 359.25784566680784
+  },
+  {
+      "id": "hV3MJGD-hAyrk97Vl-zvnQ",
+      "alias": "feast-market-and-cellar-bloomington-2",
+      "name": "Feast Market & Cellar",
+      "image_url": "https://s3-media3.fl.yelpcdn.com/bphoto/RkB2omR3y4x08NjTE5gRKA/o.jpg",
+      "is_closed": false,
+      "url": "https://www.yelp.com/biz/feast-market-and-cellar-bloomington-2?adjust_creative=XUJZ7EXQV4av9HuQtef3Nw&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=XUJZ7EXQV4av9HuQtef3Nw",
+      "review_count": 127,
+      "categories": [
+          {
+              "alias": "bakeries",
+              "title": "Bakeries"
+          },
+          {
+              "alias": "newamerican",
+              "title": "New American"
+          },
+          {
+              "alias": "wine_bars",
+              "title": "Wine Bars"
+          }
+      ],
+      "rating": 4.5,
+      "coordinates": {
+          "latitude": 39.1533353938549,
+          "longitude": -86.5384726842605
+      },
+      "transactions": [
+          "delivery"
+      ],
+      "price": "$$",
+      "location": {
+          "address1": "407 W Patterson Dr",
+          "address2": "",
+          "address3": "",
+          "city": "Bloomington",
+          "zip_code": "47403",
+          "country": "US",
+          "state": "IN",
+          "display_address": [
+              "407 W Patterson Dr",
+              "Bloomington, IN 47403"
+          ]
+      },
+      "phone": "+18122878615",
+      "display_phone": "(812) 287-8615",
+      "distance": 1673.536268261601
   }
   ]);
 
@@ -136,6 +221,9 @@ const Home = () => {
           <Restaurant key={restaurant.id} restaurant={restaurant} />
         ))}
       </ScrollView>
+      {/* <FlatList data={businesses} 
+        renderItem={
+            ({business}) =><Restaurant key={business.id} restaurant={business} /> } /> */}
     </View>
   );
 };

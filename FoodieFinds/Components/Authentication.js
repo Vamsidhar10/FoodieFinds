@@ -1,32 +1,26 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet,Image,alert, Alert } from 'react-native';
-import { initializeApp } from "firebase/app";
-import { getAuth, createUserWithEmailAndPassword,signInWithEmailAndPassword,signInWithPopup,GoogleAuthProvider } from 'firebase/auth';
-import firebaseConfig from '../firebaseConfig';
+import { createUserWithEmailAndPassword,signInWithEmailAndPassword,signInWithPopup,GoogleAuthProvider } from 'firebase/auth';
+import {FIREBASE_APP,FIREBASE_AUTH} from '../firebaseConfig';
 import * as WebBrowser from 'expo-web-browser';
 import * as Google from 'expo-auth-session/providers/google';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation }  from '@react-navigation/native';
 
 WebBrowser.maybeCompleteAuthSession();
 
 const AuthScreen = () => {
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyC8NYFhcvX3csY-_YTGL9awPFRNAt81bVI",
-    authDomain: "foodiefinder-14a07.firebaseapp.com",
-    projectId: "foodiefinder-14a07",
-    storageBucket: "foodiefinder-14a07.appspot.com",
-    messagingSenderId: "264191423840",
-    appId: "1:264191423840:web:15a5ff9c4280a354ed9a05"
-};
-   const app = initializeApp(firebaseConfig);
-   const auth = getAuth(app);
+
+
+  const app = FIREBASE_APP;
+  const auth = FIREBASE_AUTH
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
   const [userInfo, setUserInfo] = useState(null);
- // const navigation = useNavigation();
+  const navigation = useNavigation();
 
   //Google authentication
   const provider = new GoogleAuthProvider();
@@ -42,7 +36,7 @@ const AuthScreen = () => {
   })
 
   React.useEffect(()=>{
-    handleSignInWithGoogle()
+    handleSignInWithGoogle
   },[response]);
 
   async function handleSignInWithGoogle(){
@@ -55,7 +49,7 @@ const AuthScreen = () => {
       }
     }
     else{
-      setUserInfo(JSON.parse(use));
+      setUserInfo(JSON.parse(user));
     }
   }
 
@@ -131,12 +125,13 @@ const AuthScreen = () => {
         return
     }
     createUserWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
+    .then(async(userCredential) => {
       // Signed up 
       Alert.alert('Signed up successfully');
       const user = userCredential.user;
-      //console.log("Success:{}",user);
-     // navigation.navigate('Home')
+      await AsyncStorage.setItem("@user",JSON.stringify(user));
+      console.log("Success:{}",user);
+      navigation.navigate('Home')
     })
     .catch((error) => {
       const errorCode = error.code;
@@ -154,11 +149,12 @@ const AuthScreen = () => {
         return
     }
     signInWithEmailAndPassword(auth, email, password)
-  .then((userCredential) => {
+  .then(async(userCredential) => {
     const user = userCredential.user;
     Alert.alert('Signed In successfully');
+    await AsyncStorage.setItem("@user",JSON.stringify(user));
     console.log(user);
-   // navigation.navigate('Home');
+    navigation.navigate('Home');
   })
   .catch((error) => {
     const errorCode = error.code;
@@ -234,8 +230,8 @@ buttonContainer:{
     backgroundColor: '#f0f0f0',
   },
   logo: {
-    width: 100,
-    height: 100,
+    width: 200,
+    height: 200,
     marginBottom: 20,
   },
   title: {

@@ -1,5 +1,6 @@
-
-import Constants from 'expo-constants';
+import { initializeApp } from "firebase/app";
+import { getFirestore} from "firebase/firestore";
+import { initializeAuth, getReactNativePersistence, indexedDBLocalPersistence } from 'firebase/auth';
 
 const firebaseConfig = {
     apiKey: process.env.EXPO_PUBLIC_API_KEY,
@@ -10,5 +11,9 @@ const firebaseConfig = {
     appId: process.env.EXPO_PUBLIC_APP_ID
 };
 
-export default firebaseConfig;
+export const FIREBASE_APP = initializeApp(firebaseConfig);
+export const FIREBASE_AUTH = initializeAuth(FIREBASE_APP, {
+    persistence: indexedDBLocalPersistence
+});
+export const FIREBASE_DB = getFirestore(FIREBASE_APP);
 
