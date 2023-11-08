@@ -131,7 +131,7 @@ const AuthScreen = () => {
       const user = userCredential.user;
       await AsyncStorage.setItem("@user",JSON.stringify(user));
       console.log("Success:{}",user);
-      navigation.navigate('Home')
+      navigation.navigate('HOME')
     })
     .catch((error) => {
       const errorCode = error.code;
@@ -154,7 +154,7 @@ const AuthScreen = () => {
     Alert.alert('Signed In successfully');
     await AsyncStorage.setItem("@user",JSON.stringify(user));
     console.log(user);
-    navigation.navigate('Home');
+    navigation.navigate('HOME');
   })
   .catch((error) => {
     const errorCode = error.code;

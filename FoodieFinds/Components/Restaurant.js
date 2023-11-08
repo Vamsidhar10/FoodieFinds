@@ -1,30 +1,34 @@
-import React from 'react';
+import React,{useContext} from 'react';
 import { View, Text, Image, StyleSheet,Button } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import {RestaurantContext} from '../Components/RestaurantContext';
 
-const RestaurantCard = ({ restaurant}) => {
-  const categories = restaurant.categories.map((category) => category.title).join(', ');
-  const reviewCount = restaurant.review_count;
-  const rating = restaurant.rating;
+const RestaurantCard = ({ restaurant:propsRest}) => {
+  const {restaurant, setRestaurant} = useContext(RestaurantContext);
+  const categories = propsRest.categories.map((category) => category.title).join(', ');
+  const reviewCount = propsRest.review_count;
+  const rating = propsRest.rating;
    const navigation = useNavigation();
   
   const goToDetails = () => {
+    console.log("Setting restaurant to:");
+    setRestaurant(propsRest);
     // Navigate to the restaurant details screen
-    navigation.navigate('RestaurantDetails', { restaurant });
+    navigation.navigate('Restaurant Details');
   };
 
   return (
     <View style={styles.card}>
       <View style={styles.imageContainer}>
-        <Image source={{ uri: restaurant.image_url }} style={styles.image} />
+        <Image source={{ uri: propsRest.image_url }} style={styles.image} />
       </View>
       <View style={styles.infoContainer}>
-        <Text style={styles.name}>{restaurant.name}</Text>
+        <Text style={styles.name}>{propsRest.name}</Text>
         <Text style={styles.tags}>{categories}</Text>
         <Text style={styles.rating}>
           {`${rating} ★ (${reviewCount} reviews)`}
         </Text>
-        <Text style={styles.address}>{restaurant.location.address1}</Text>
+        <Text style={styles.address}>{propsRest.location.address1}</Text>
         <View style={styles.button}>
           <Button  title='View Details' onPress={()=>goToDetails()}/>
         </View>

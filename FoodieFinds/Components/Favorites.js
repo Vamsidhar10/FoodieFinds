@@ -1,7 +1,8 @@
 import React, { useState ,useEffect} from 'react';
-import { View, Text, TextInput, Button, StyleSheet, ScrollView, Alert, FlatList,Image } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, ScrollView,TouchableOpacity, FlatList,Image, Linking } from 'react-native';
 import { fetchFavoritesForUser } from './FirestoreHandler';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation,useFocusEffect } from '@react-navigation/native';
+import { Rating, AirbnbRating } from 'react-native-ratings';
 
 
 
@@ -9,16 +10,36 @@ const Favorites = () => {
   const navigation = useNavigation();
   const [favorites, setFavorites] = useState([]);
 
-  useEffect(() => {
-    const fetchUserFavorites = async () => {
-      const userFavorites = await fetchFavoritesForUser(navigation);
-      console.log(userFavorites);
-      // Parse the restaurantDetails property of each favorite
-      setFavorites(userFavorites);
-    };
+  // useEffect(() => {
+  //   const fetchUserFavorites = async () => {
+  //     const userFavorites = await fetchFavoritesForUser(navigation);
+  //     console.log(userFavorites);
+  //     // Parse the restaurantDetails property of each favorite
+  //     setFavorites(userFavorites);
+  //   };
 
-    fetchUserFavorites();
-  }, [navigation]);
+  //   fetchUserFavorites();
+  // }, [navigation]);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const fetchData = async () => {
+        const userFavorites = await fetchFavoritesForUser(navigation);
+        console.log(userFavorites);
+        // Parse the restaurantDetails property of each favorite
+        setFavorites(userFavorites);
+      };
+
+      fetchData();
+    }, [])
+  );
+
+
+  const openWebsite = (url) => {
+    if (url) {
+      Linking.openURL(url);
+    }
+  };
 
   return favorites ? (
 <View style={styles.container}>
@@ -29,8 +50,14 @@ const Favorites = () => {
           <View style={styles.card}>
             <Image source={{ uri: item.restaurant_details.image_url }} style={styles.image} />
             <Text style={styles.name}>{item.restaurant_details.name}</Text>
-            <Text style={styles.rating}>Rating: {item.restaurant_details.rating}</Text>
-            <Text style={styles.price}>Price: {item.restaurant_details.price}</Text>
+            <Text style={styles.rating}>Rating: {`${item.restaurant_details.rating || 0} ★ (${item.restaurant_details.review_count || 0} reviews)`}</Text>
+            <Text style={styles.price}>{`Price: ${item.restaurant_details.price?item.restaurant_details.price:'Unavailable'}`}</Text>
+            
+            {item.restaurant_details.url && (
+          <TouchableOpacity style={styles.websiteButton} onPress={()=>openWebsite(item.restaurant_details.url)}>
+            <Text style={styles.websiteButtonText}>Visit Website</Text>
+          </TouchableOpacity>
+        )}
           </View>
         )}
       />
@@ -70,12 +97,23 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   rating: {
-    fontSize: 16,
-    color: 'gray',
-    marginBottom: 5,
+    fontSize: 15,
+    color: '#ffaa00',
+    marginBottom: 10,
   },
   price: {
     fontSize: 16,
   },
+  websiteButton: {
+    backgroundColor: '#2196F3',
+    padding: 10,
+    marginTop: 10,
+    borderRadius: 5,
+    alignItems: 'center',
+  },
+  websiteButtonText: {
+    color: 'white',
+    fontSize: 16,
+  }
 });
 export default Favorites;

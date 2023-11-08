@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState} from 'react';
 import { View, Text, TextInput, Button, StyleSheet, ScrollView, Alert,FlatList } from 'react-native';
 import axios from 'axios';
 import Restaurant from "../Components/Restaurant";
+import { useFocusEffect } from '@react-navigation/native';
 
 const Home = () => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [location, setLocation] = useState('');
+  const [searchTerm, setSearchTerm] = useState('Food');
+  const [location, setLocation] = useState('Bloomington,IN');
   const [businesses, setBusinesses] = useState([
     {
       "id": "zMWjsqs6H6jiLaDcKq6g4w",
@@ -178,39 +179,29 @@ const Home = () => {
     }
 
   };
+  
+  useFocusEffect(
+    React.useCallback(() => {
+      const fetchData = async () => {
+         await onSearchSubmit();
+      };
 
-  const SearchBar = ({ searchTerm, onSearchTermChange, location, onLocationChange, onSearchSubmit }) => {
-    return (
-      <View style={styles.searchBar}>
-        <TextInput
-          style={styles.input}
-          placeholder=" Search..."
-          value={searchTerm}
-          onChangeText={onSearchTermChange}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder=" Location"
-          value={location}
-          onChangeText={onLocationChange}
-        />
-        <TouchableOpacity style={styles.searchButton} onPress={onSearchSubmit}></TouchableOpacity>
-      </View>
-    );
-  };
+      fetchData();
+    }, [])
+  );
 
   return (
     <View style={styles.container}>
         <View style={styles.searchBar}>
         <TextInput
           style={styles.input}
-          placeholder=" Search..."
+          placeholder=" Search Food/Events "
           value={searchTerm}
           onChangeText={onSearchTermChange}
         />
         <TextInput
           style={styles.input}
-          placeholder=" Location"
+          placeholder="  Location"
           value={location}
           onChangeText={onLocationChange}
         />

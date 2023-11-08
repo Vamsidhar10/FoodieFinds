@@ -4,12 +4,12 @@ import { FIREBASE_DB } from '../firebaseConfig';
 import { Alert } from 'react-native';
 
 
-const checkIfUserIsLoggedIn = async(navigation) =>{
+export const checkIfUserIsLoggedIn = async(navigation) =>{
     const user = JSON.parse(await AsyncStorage.getItem("@user"));
     console.log(user);
     if(user == undefined || user == null){
-      Alert.alert("Sign in to save your favorites");
-      navigation.navigate('Auth');
+      Alert.alert("Please Sign in or Sign Up to create a new account");
+      navigation.navigate('AUTH');
       return;
     }
     //console.log(user.uid);
@@ -75,6 +75,7 @@ export const fetchFavoritesForUser = async (navigation) => {
         return;
     }
     console.log(user.uid);
+    console.log(user);
     const userRef = doc(FIREBASE_DB, 'User', user.uid);
     const favoritesRef = collection(userRef, 'favorites');
 
@@ -103,3 +104,31 @@ export const fetchFavoritesForUser = async (navigation) => {
     return [];
   }
 };  
+
+
+export const saveReview = async (rating, comment,navigation) => {
+  const user = await checkIfUserIsLoggedIn(navigation);
+  if(user == undefined || user == null){
+      return;
+  }
+  console.log(user.uid);
+  
+  try {
+    const reviewsRef = collection(FIREBASE_DB, 'Reviews');
+
+    // Create a new review object with the provided data
+    const newReview = {
+      userId: user.uid,
+      userEmail: user.email,
+      rating: rating,
+      comment: comment,
+      timestamp: new Date(),
+    };
+    const docRef = await addDoc(reviewsRef, newReview);
+    console.log('Review added with ID: ', docRef.id);
+    return docRef.id;
+  } catch (error) {
+    console.error('Error adding review: ', error);
+    throw error;
+  }
+};
