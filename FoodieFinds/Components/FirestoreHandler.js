@@ -1,4 +1,4 @@
-import { collection, query, where, getDocs, addDoc, doc, setDoc, getDoc,exists } from 'firebase/firestore';
+import { collection, query, where, getDocs, addDoc, doc, setDoc, getDoc,arrayUnion } from 'firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { FIREBASE_DB } from '../firebaseConfig';
 import { Alert } from 'react-native';
@@ -106,29 +106,34 @@ export const fetchFavoritesForUser = async (navigation) => {
 };  
 
 
-export const saveReview = async (rating, comment,navigation) => {
+export const saveReview = async (navigation, review) => {
   const user = await checkIfUserIsLoggedIn(navigation);
-  if(user == undefined || user == null){
-      return;
-  }
-  console.log(user.uid);
-  
-  try {
-    const reviewsRef = collection(FIREBASE_DB, 'Reviews');
 
-    // Create a new review object with the provided data
-    const newReview = {
-      userId: user.uid,
-      userEmail: user.email,
-      rating: rating,
-      comment: comment,
-      timestamp: new Date(),
-    };
-    const docRef = await addDoc(reviewsRef, newReview);
-    console.log('Review added with ID: ', docRef.id);
-    return docRef.id;
+  if (user == undefined || user == null) {
+    return;
+  }
+
+  console.log(user.uid);
+  const newReview = {
+    userId: user.uid,
+    userEmail: user.email,
+    rating: review.rating,
+    comment: review.comment,
+    timestamp: new Date(),
+  };
+
+  try {
+    
+    const restaurantDocRef = doc(FIREBASE_DB, 'Reviews', review.restaurant.id);
+
+    await setDoc(restaurantDocRef, { reviews: arrayUnion(newReview) }, { merge: true });
+
+
+   
   } catch (error) {
-    console.error('Error adding review: ', error);
-    throw error;
+    console.log(error);
   }
 };
+  
+
+

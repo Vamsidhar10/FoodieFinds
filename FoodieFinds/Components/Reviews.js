@@ -1,13 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState,useContext } from 'react';
 import { View, Text, TextInput, Button, StyleSheet,Alert } from 'react-native';
 import { AirbnbRating } from 'react-native-ratings';
 import { saveReview } from './FirestoreHandler';
 import { useNavigation} from '@react-navigation/native';
+import {RestaurantContext} from './RestaurantContext';
 
 const Reviews = () => {
   const navigation = useNavigation();
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState('');
+  const {restaurant, setRestaurant} = useContext(RestaurantContext);
 
   const handleRating = (ratedValue) => {
     
@@ -21,15 +23,16 @@ const Reviews = () => {
 
   const handleSubmit = async () => {
     try {
-      // Call saveReview and pass the necessary data
-      const reviewId = await saveReview(rating, comment,navigation);
-      console.log('Review saved with ID: ', reviewId);
+      const review = {
+        'rating':rating,
+        'comment':comment,
+        'restaurant':restaurant
+      }
+      const reviewId = await saveReview(navigation,review);
       Alert.alert("Added review successfully");
-      // Clear the input fields or navigate to another screen as needed.
       setRating(0);
       setComment('');
     } catch (error) {
-      // Handle the error as needed, e.g., show an error message to the user
       console.error('Error saving review: ', error);
     }
   };

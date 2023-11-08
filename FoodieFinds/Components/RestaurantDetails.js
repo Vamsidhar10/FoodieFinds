@@ -4,7 +4,6 @@ import { useNavigation,useFocusEffect } from '@react-navigation/native';
 import axios from 'axios';
 import { addFavoriteToDB } from './FirestoreHandler';
 import {RestaurantContext} from './RestaurantContext';
-import RestaurantRatingCommentInput from './RatingCommentInput';
 
 
 const RestaurantDetails = () => {
@@ -49,9 +48,9 @@ const RestaurantDetails = () => {
     }
   }
 
-  // if(restaurantDetails==null || restaurantDetails==undefined || restaurant.id!=restaurantDetails.id){
-  //   fetchBusinessDetails();
-  // }
+  if(restaurantDetails==null || restaurantDetails==undefined || restaurant.id!=restaurantDetails.id){
+    fetchBusinessDetails();
+  }
   
   // useEffect(() => {
   //   if (!route.params) {
@@ -139,7 +138,6 @@ const RestaurantDetails = () => {
         <TouchableOpacity style={styles.websiteButton} onPress={addFavorite}>
             <Text style={styles.websiteButtonText}>Add to Favorites</Text>
           </TouchableOpacity>
-          {/* <RestaurantRatingCommentInput onSubmit={handleRatingCommentSubmit} /> */}
       </ScrollView>
     </View>: <Text>Loading...</Text>
   );
