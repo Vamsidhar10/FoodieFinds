@@ -6,28 +6,25 @@ import * as WebBrowser from 'expo-web-browser';
 import * as Google from 'expo-auth-session/providers/google';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation }  from '@react-navigation/native';
+import Constants from 'expo-constants';
 
 WebBrowser.maybeCompleteAuthSession();
 
 const AuthScreen = () => {
-
-
 
   const app = FIREBASE_APP;
   const auth = FIREBASE_AUTH
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState(null);
-  const [userInfo, setUserInfo] = useState(null);
   const navigation = useNavigation();
 
   //Google authentication
   const provider = new GoogleAuthProvider();
 
-  const GOOGLE_WEB_CLIENT_ID = '264191423840-l4srk6gudnar85sl4olj8j7iaoed1kvn.apps.googleusercontent.com'
-  const GOOGLE_IOS_CLIENT_ID = '264191423840-5re8e7cno5eiqjlclfkcde2u0jpe0eie.apps.googleusercontent.com'
-  const GOOGLE_ANDROID_CLIENT_ID = '264191423840-1mrqasdue65ga4g08jish971tvui3vk3.apps.googleusercontent.com'
+  const GOOGLE_WEB_CLIENT_ID = Constants.expoConfig.extra.GOOGLE_WEB_CLIENT_ID
+  const GOOGLE_IOS_CLIENT_ID = Constants.expoConfig.extra.GOOGLE_IOS_CLIENT_ID
+  const GOOGLE_ANDROID_CLIENT_ID = Constants.expoConfig.extra.GOOGLE_ANDROID_CLIENT_ID
 
   const [request, response, promptAsync]= Google.useAuthRequest({
     androidClientId:GOOGLE_ANDROID_CLIENT_ID,
@@ -72,7 +69,7 @@ const AuthScreen = () => {
 
   }
 
-
+  // web google account signin
   // const signInWithGoogle = async() =>{
   //   const provider = new firebase.auth.GoogleAuthProvider();
   //   firebase.auth().signInWithPopup(provider)

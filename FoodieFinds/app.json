@@ -32,7 +32,17 @@
     "extra": {
       "eas": {
         "projectId": "efef98ee-32a0-443e-b29e-e295ce6bf2a7"
-      }
+      },
+      "API_KEY":"AIzaSyC8NYFhcvX3csY-_YTGL9awPFRNAt81bVI",
+      "AUTH_DOMAIN":"foodiefinder-14a07.firebaseapp.com",
+      "PROJECT_ID":"foodiefinder-14a07",
+      "STORAGE_BUCKET":"foodiefinder-14a07.appspot.com",
+      "MESSAGING_SENDER_ID":"264191423840",
+      "APP_ID":"1:264191423840:web:15a5ff9c4280a354ed9a05",
+      "YELP_API_KEY":"mZooVn3BFvGT3idi_fQs9YdDk97DCiRgMoQa1R9RA24OKQIqXzYNnWmJrVdGOKMtVbiCgqblT29wjh7IPLvVnzlUNB8ydrGJ4KlPHvEZpWCu-y4GQ9Lx90ciq1Y4ZXYx",
+      "GOOGLE_WEB_CLIENT_ID":"264191423840-l4srk6gudnar85sl4olj8j7iaoed1kvn.apps.googleusercontent.com",
+      "GOOGLE_IOS_CLIENT_ID":"264191423840-5re8e7cno5eiqjlclfkcde2u0jpe0eie.apps.googleusercontent.com",
+      "GOOGLE_ANDROID_CLIENT_ID":"264191423840-1mrqasdue65ga4g08jish971tvui3vk3.apps.googleusercontent.com"
     }
   }
 }

@@ -4,32 +4,16 @@ import { useNavigation,useFocusEffect } from '@react-navigation/native';
 import axios from 'axios';
 import { addFavoriteToDB } from './FirestoreHandler';
 import {RestaurantContext} from './RestaurantContext';
+import Constants from 'expo-constants';
 
 
 const RestaurantDetails = () => {
   
   const navigation = useNavigation();
-  const apiKey = process.env.EXPO_PUBLIC_YELP_API_KEY;
+  const apiKey = Constants.expoConfig.extra.YELP_API_KEY;
   const [restaurantDetails, setRestaurantDetails] = useState({"alias": "the-elm-bloomington", "categories": [{"alias": "newamerican", "title": "New American"}], "coordinates": {"latitude": 39.161246325212296, "longitude": -86.52629759999999}, "display_phone": "(812) 407-4339", "hours": [{"hours_type": "REGULAR", "is_open_now": false, "open": [Array]}], "id": "UnS087E_cYstvT0HJO8Ycw", "image_url": "https://s3-media3.fl.yelpcdn.com/bphoto/Lffg2EFgd2B2xwn2a15ZQA/o.jpg", "is_claimed": true, "is_closed": false, "location": {"address1": "614 E 2nd St", "address2": "", "address3": null, "city": "Bloomington", "country": "US", "cross_streets": "", "display_address": ["614 E 2nd St", "Bloomington, IN 47401"], "state": "IN", "zip_code": "47401"}, "messaging": {"url": "https://www.yelp.com/raq/UnS087E_cYstvT0HJO8Ycw?adjust_creative=XUJZ7EXQV4av9HuQtef3Nw&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_lookup&utm_source=XUJZ7EXQV4av9HuQtef3Nw#popup%3Araq", "use_case_text": "Message the Business"}, "name": "The Elm", "phone": "+18124074339", "photos": ["https://s3-media3.fl.yelpcdn.com/bphoto/Lffg2EFgd2B2xwn2a15ZQA/o.jpg", "https://s3-media2.fl.yelpcdn.com/bphoto/LzHk0G4WyApC1XS9rz3j-Q/o.jpg", "https://s3-media4.fl.yelpcdn.com/bphoto/4UXAzV-oUM89fUAY7RSXfQ/o.jpg"], "rating": 4.5, "review_count": 57, "transactions": [], "url": "https://www.yelp.com/biz/the-elm-bloomington?adjust_creative=XUJZ7EXQV4av9HuQtef3Nw&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_lookup&utm_source=XUJZ7EXQV4av9HuQtef3Nw"});
   const {restaurant, setRestaurant} = useContext(RestaurantContext);
   console.log("Received id: " + restaurant.id);
-  // const onScreenFocus = () => {
-  //   if (!restaurant?.id) {
-  //  Alert.alert("Please select a restaurant in Home to view details");
-  //  navigation.navigate('Home');
-  // }
-  // };
-
-  // useFocusEffect(onScreenFocus);
-
-  // useEffect(() => {
-  //   console.log("in details");
-  //   if (!restaurant?.id) {
-  // Alert.alert("Please select a restaurant in Home to view details");
-  //  navigation.navigate('Home');
-  //  return;
-  // }
-  // },[0]);
    
   async function fetchBusinessDetails() {
     if(!restaurant?.id){
@@ -38,7 +22,7 @@ const RestaurantDetails = () => {
     try {
       const response = await axios.get(`https://api.yelp.com/v3/businesses/${restaurant.id}`, {
         headers: {
-          Authorization: `Bearer ${apiKey}`, // Replace YOUR_API_KEY_HERE with your actual Yelp API key
+          Authorization: `Bearer ${apiKey}`,
         },
       });
       setRestaurantDetails(response.data);
@@ -96,15 +80,6 @@ const RestaurantDetails = () => {
    // Alert.alert("Added to Favorites successfully");
     }
   }
-
-  const handleRatingCommentSubmit = ({ rating, comment }) => {
-    // Implement logic to send the rating and comment to your server or store them locally.
-    // You can also update the UI to display the user's rating and comment.
-    console.log(`Rating: ${rating}, Comment: ${comment}`);
-  };
-
-
-
   return (restaurantDetails?
         <View style={styles.container}>
         <View>
@@ -178,6 +153,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: '#ffaa00',
     marginBottom: 10,
+    textDecorationLine: 'underline'
   },
   price: {
     fontSize: 18,

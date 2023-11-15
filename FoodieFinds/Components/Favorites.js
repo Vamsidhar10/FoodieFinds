@@ -1,8 +1,7 @@
-import React, { useState ,useEffect} from 'react';
-import { View, Text, TextInput, Button, StyleSheet, ScrollView,TouchableOpacity, FlatList,Image, Linking } from 'react-native';
+import React, { useState} from 'react';
+import { View, Text,StyleSheet,TouchableOpacity, FlatList,Image, Linking } from 'react-native';
 import { fetchFavoritesForUser } from './FirestoreHandler';
 import { useNavigation,useFocusEffect } from '@react-navigation/native';
-import { Rating, AirbnbRating } from 'react-native-ratings';
 
 
 
@@ -10,23 +9,12 @@ const Favorites = () => {
   const navigation = useNavigation();
   const [favorites, setFavorites] = useState([]);
 
-  // useEffect(() => {
-  //   const fetchUserFavorites = async () => {
-  //     const userFavorites = await fetchFavoritesForUser(navigation);
-  //     console.log(userFavorites);
-  //     // Parse the restaurantDetails property of each favorite
-  //     setFavorites(userFavorites);
-  //   };
-
-  //   fetchUserFavorites();
-  // }, [navigation]);
 
   useFocusEffect(
     React.useCallback(() => {
       const fetchData = async () => {
         const userFavorites = await fetchFavoritesForUser(navigation);
         console.log(userFavorites);
-        // Parse the restaurantDetails property of each favorite
         setFavorites(userFavorites);
       };
 

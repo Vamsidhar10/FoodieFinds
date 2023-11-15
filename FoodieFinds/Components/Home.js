@@ -1,8 +1,9 @@
-import React, { useEffect, useState} from 'react';
-import { View, Text, TextInput, Button, StyleSheet, ScrollView, Alert,FlatList } from 'react-native';
+import React, { useState} from 'react';
+import { View, TextInput, Button, StyleSheet, ScrollView, Alert } from 'react-native';
 import axios from 'axios';
 import Restaurant from "../Components/Restaurant";
 import { useFocusEffect } from '@react-navigation/native';
+import Constants from 'expo-constants';
 
 const Home = () => {
   const [searchTerm, setSearchTerm] = useState('Food');
@@ -141,8 +142,7 @@ const Home = () => {
   }
   ]);
 
-  const apiKey = process.env.EXPO_PUBLIC_YELP_API_KEY;
-  const baseURL = 'https://api.yelp.com/v3';
+  const apiKey = Constants.expoConfig.extra.YELP_API_KEY;
 
   const onSearchTermChange = (text) => {
     setSearchTerm(text);

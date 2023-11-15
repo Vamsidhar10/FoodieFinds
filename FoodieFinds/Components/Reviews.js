@@ -1,8 +1,8 @@
 import React, { useState,useContext } from 'react';
 import { View, Text, TextInput, Button, StyleSheet,Alert } from 'react-native';
 import { AirbnbRating } from 'react-native-ratings';
-import { saveReview } from './FirestoreHandler';
-import { useNavigation} from '@react-navigation/native';
+import { saveReview,getReviewsForRestaurant } from './FirestoreHandler';
+import { useNavigation, useFocusEffect} from '@react-navigation/native';
 import {RestaurantContext} from './RestaurantContext';
 
 const Reviews = () => {
@@ -10,6 +10,7 @@ const Reviews = () => {
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState('');
   const {restaurant, setRestaurant} = useContext(RestaurantContext);
+  const [reviews, setReviews] = useState([]);
 
   const handleRating = (ratedValue) => {
     
@@ -21,6 +22,22 @@ const Reviews = () => {
     setComment(text);
   };
 
+  useFocusEffect(
+    React.useCallback(() => {
+      const fetchData = async () => {
+        try {
+          const fetchedReviews = await getReviewsForRestaurant(navigation,restaurant.id);
+          console.log(fetchedReviews);
+          setReviews(fetchedReviews);
+        } catch (error) {
+          console.error('Error fetching reviews: ', error);
+        }
+      };
+
+      fetchData();
+    }, [])
+  );
+
   const handleSubmit = async () => {
     try {
       const review = {
@@ -28,7 +45,7 @@ const Reviews = () => {
         'comment':comment,
         'restaurant':restaurant
       }
-      const reviewId = await saveReview(navigation,review);
+      await saveReview(navigation,review);
       Alert.alert("Added review successfully");
       setRating(0);
       setComment('');
@@ -57,6 +74,18 @@ const Reviews = () => {
       />
       </View>
       <Button title="Submit Review" onPress={handleSubmit} />
+
+      <View>
+            <Text style={styles.title}>Reviews</Text>
+            {reviews.map((review, index) => (
+              <View style={styles.reviewContainer} key={index}>
+                <Text style={styles.reviewText}>Rating: {review.rating}</Text>
+                <Text style={styles.reviewText}>Comment: {review.comment}</Text>
+                <Text style={styles.reviewText}>User Email: {review.userEmail}</Text>
+    </View>
+  ))}
+</View>
+
     </View>
   );
 };
@@ -79,6 +108,17 @@ const styles = StyleSheet.create({
     padding: 10,
     marginBottom: 20,
     marginTop:30,
+  },
+  reviewContainer: {
+    marginBottom: 20,
+    padding: 10,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+  },
+  reviewText: {
+    fontSize: 16,
+    marginBottom: 5,
   },
 });
 

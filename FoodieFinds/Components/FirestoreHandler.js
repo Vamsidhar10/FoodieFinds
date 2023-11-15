@@ -108,7 +108,6 @@ export const fetchFavoritesForUser = async (navigation) => {
 
 export const saveReview = async (navigation, review) => {
   const user = await checkIfUserIsLoggedIn(navigation);
-
   if (user == undefined || user == null) {
     return;
   }
@@ -127,11 +126,30 @@ export const saveReview = async (navigation, review) => {
     const restaurantDocRef = doc(FIREBASE_DB, 'Reviews', review.restaurant.id);
 
     await setDoc(restaurantDocRef, { reviews: arrayUnion(newReview) }, { merge: true });
-
-
    
   } catch (error) {
     console.log(error);
+  }
+};
+
+
+
+export const getReviewsForRestaurant = async (navigation,restaurantId) => {
+  const user = await checkIfUserIsLoggedIn(navigation);
+  try {
+    const restaurantDocRef = doc(FIREBASE_DB, 'Reviews', restaurantId); // Reference to the document within 'Reviews' collection
+
+    const docSnapshot = await getDoc(restaurantDocRef);
+    const reviewsData = docSnapshot.data();
+
+    if (reviewsData && reviewsData.reviews) {
+      return reviewsData.reviews; // Assuming 'reviews' is an array field within the document
+    } else {
+      return []; // Return an empty array if there are no reviews or if the document doesn't exist
+    }
+  } catch (error) {
+    console.error('Error fetching reviews: ', error);
+    throw error;
   }
 };
   
